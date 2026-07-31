@@ -131,6 +131,19 @@ placeholder="输入泰语，例如：ฉันคิดถึงเธอมา�
 </button>
 
 
+<div style="margin-top:15px">
+
+<button onclick="speakFull()">🔊 播放整句</button>
+
+<select id="speed">
+<option value="0.6">慢速</option>
+<option value="1" selected>正常</option>
+<option value="1.4">快速</option>
+</select>
+
+</div>
+
+
 </div>
 
 
@@ -157,7 +170,15 @@ speechSynthesis.cancel();
 speechSynthesis.speak(speech);
 
 }
+function speakFull(){
 
+let text=document.getElementById("input").value;
+
+let speed=document.getElementById("speed").value;
+
+speakThai(text,Number(speed));
+
+}
 
 
 // AI分析
