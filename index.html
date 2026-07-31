@@ -325,18 +325,98 @@ alert("还没有学习记录");
 return;
 }
 
-let text="📚 学习记录\n\n";
+let html = `
+<div style="
+position:fixed;
+top:10%;
+left:5%;
+right:5%;
+background:#20232d;
+color:white;
+padding:20px;
+border-radius:20px;
+z-index:999;
+max-height:70vh;
+overflow:auto;
+">
+
+<h2>📚 学习记录</h2>
+`;
 
 list.forEach((item,index)=>{
-text += (index+1)+". "+item.word+"\n";
+
+html += `
+<div style="
+background:#292d38;
+padding:15px;
+margin:12px 0;
+border-radius:15px;
+">
+
+<div style="
+font-size:20px;
+color:#ff75ad;
+font-weight:bold;
+">
+${item.word}
+</div>
+
+<br>
+
+<button onclick="speakThai('${item.word}')">
+🔊播放
+</button>
+
+<button onclick="loadHistory(${index})">
+🔄重新分析
+</button>
+
+</div>
+`;
+
 });
 
-let num = prompt(text+"\n请输入编号");
 
-let index = Number(num)-1;
+html += `
+<button onclick="closeHistory()">
+关闭
+</button>
+
+</div>
+`;
+
+let div=document.createElement("div");
+
+div.id="historyBox";
+
+div.innerHTML=html;
+
+document.body.appendChild(div);
+
+}
+function closeHistory(){
+
+let box=document.getElementById("historyBox");
+
+if(box){
+box.remove();
+}
+
+}
+
+
+function loadHistory(index){
+
+let list = JSON.parse(localStorage.getItem("thaiHistory") || "[]");
 
 if(list[index]){
-document.getElementById("input").value = list[index].word;
+
+document.getElementById("input").value=list[index].word;
+
+closeHistory();
+
+analyze();
+
 }
 
 }
