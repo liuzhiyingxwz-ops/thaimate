@@ -213,14 +213,25 @@ let result=await res.text();
 
 // 添加播放按钮
 
-let html=result
+let clean = result.replace(/\*\*/g,"");
+
+
+let html = clean
 
 .replace(
-/(ฉัน|คิดถึง|เธอ|มาก|ครับ|ค่ะ|ไม่|ใช่|รัก)/g,
-
+/([\u0E00-\u0E7F]+)/g,
 '<span class="thai">$1 <span class="sound" onclick="speakThai(\'$1\')">🔊</span></span>'
-
 )
+
+.replace(
+/### (.*)/g,
+'<div class="title">$1</div>'
+)
+
+.replace(
+/\n/g,
+"<br>"
+);
 
 .replace(
 /### (.*)/g,
