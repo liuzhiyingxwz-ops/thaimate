@@ -233,17 +233,6 @@ let html = clean
 "<br>"
 );
 
-.replace(
-/### (.*)/g,
-'<div class="title">$1</div>'
-)
-
-.replace(
-/\n/g,
-"<br>"
-);
-
-
 
 output.innerHTML=html;
 
