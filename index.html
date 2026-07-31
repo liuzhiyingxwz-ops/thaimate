@@ -140,7 +140,8 @@ placeholder="输入泰语，例如：ฉันคิดถึงเธอมา�
 <option value="1" selected>正常</option>
 <option value="1.4">快速</option>
 </select>
-
+ 
+<button onclick="showHistory()">📚 学习记录</button>
 </div>
 
 
@@ -315,7 +316,29 @@ JSON.stringify(list.slice(0,30))
 
 
 }
+function showHistory(){
 
+let list = JSON.parse(localStorage.getItem("thaiHistory") || "[]");
+
+if(list.length===0){
+
+alert("还没有学习记录");
+
+return;
+
+}
+
+let text="📚 学习记录\n\n";
+
+list.forEach((item,index)=>{
+
+text += (index+1)+"."+item.word+"\n";
+
+});
+
+alert(text);
+
+}
 
 
 </script>
