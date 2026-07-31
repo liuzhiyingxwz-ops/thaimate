@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>泰伴 ThaiMate V6</title>
+<title>泰伴 ThaiMate V6.1</title>
+
 
 <style>
 
@@ -16,18 +19,22 @@ font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;
 padding:20px;
 }
 
-.card{
-background:#20232d;
-border-radius:22px;
-padding:20px;
-margin-bottom:18px;
-}
 
 h1{
 font-size:32px;
 }
 
+
+.card{
+background:#20232d;
+border-radius:22px;
+padding:20px;
+margin-bottom:20px;
+}
+
+
 textarea{
+
 width:100%;
 height:120px;
 background:#292d38;
@@ -36,34 +43,61 @@ border-radius:16px;
 padding:15px;
 color:white;
 font-size:18px;
-box-sizing:border-box;
+
 }
+
 
 button{
-width:100%;
-padding:15px;
+
 border:0;
-border-radius:16px;
+border-radius:15px;
+padding:14px 22px;
 background:#ff5b9a;
 color:white;
-font-size:18px;
+font-size:17px;
 font-weight:bold;
-margin-top:15px;
+
 }
+
 
 .result{
-white-space:pre-wrap;
+
 line-height:1.8;
+font-size:17px;
+
 }
 
-.small{
-color:#aaa;
+
+.thai{
+
+color:#ff75ad;
+font-size:22px;
+font-weight:bold;
+
 }
+
+
+.sound{
+
+background:#343846;
+padding:6px 12px;
+border-radius:12px;
+margin-left:8px;
+cursor:pointer;
+
+}
+
+
+.title{
+
+font-size:22px;
+font-weight:bold;
+margin-top:20px;
+
+}
+
 
 </style>
-
-<!-- Google 登录 -->
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 
 </head>
 
@@ -78,111 +112,88 @@ color:#aaa;
 
 <div class="card">
 
+
 <h2>
 今天想学哪句泰语？
 </h2>
 
 
-<textarea id="thaiInput"
-placeholder="输入泰语，例如：
-
-ฉันคิดถึงเธอมาก
-">
+<textarea id="input"
+placeholder="输入泰语，例如：ฉันคิดถึงเธอมาก">
 </textarea>
 
 
+<br><br>
+
+
 <button onclick="analyze()">
-开始 AI 分析
+开始分析
 </button>
 
 
 </div>
 
 
-
-<div class="card">
-
-<h2>
-AI分析结果
-</h2>
-
-
-<div id="output" class="result">
+<div class="card result" id="output">
 
 等待分析...
 
 </div>
-
-
-</div>
-
-
-
-<div class="card">
-
-<h2>
-学习记录
-</h2>
-
-
-<div id="history">
-
-暂无记录
-
-</div>
-
-
-</div>
-
-
-
-
 <script>
 
 
-// 你的 Cloudflare Worker 地址
+// 泰语发音
 
-const API_URL =
-"https://thaimate-ai.liuzhiyingxwz.workers.dev";
+function speakThai(text, speed=1){
+
+let speech = new SpeechSynthesisUtterance(text);
+
+speech.lang="th-TH";
+
+speech.rate=speed;
+
+speechSynthesis.cancel();
+
+speechSynthesis.speak(speech);
+
+}
 
 
 
-
-// 调用AI
+// AI分析
 
 async function analyze(){
 
+let text=document.getElementById("input").value;
 
-let text =
-document.getElementById("thaiInput").value;
+let output=document.getElementById("output");
 
 
 if(!text){
 
-alert("请输入泰语");
+output.innerHTML="请输入泰语";
 
 return;
 
 }
 
 
-let output =
-document.getElementById("output");
-
-
-output.innerText="AI分析中...";
+output.innerHTML="AI分析中...";
 
 
 try{
 
 
-let res =
-await fetch(API_URL,{
+let res=await fetch(
+"https://thaimate-ai.liuzhiyingxwz.workers.dev/",
+{
 
 method:"POST",
 
 headers:{
+
 "Content-Type":"application/json"
+
 },
 
 body:JSON.stringify({
@@ -191,34 +202,52 @@ text:text
 
 })
 
-});
+}
 
-
-
-
-
-
-let result = await res.text();
-
-
-
-output.innerText=result;
-
-
-
-saveHistory(
-text,
-result
 );
 
 
 
-}catch(e){
+let result=await res.text();
 
 
-output.innerText=
-"连接失败："+e;
+// 添加播放按钮
 
+let html=result
+
+.replace(
+/(ฉัน|คิดถึง|เธอ|มาก|ครับ|ค่ะ|ไม่|ใช่|รัก)/g,
+
+'<span class="thai">$1 <span class="sound" onclick="speakThai(\'$1\')">🔊</span></span>'
+
+)
+
+.replace(
+/### (.*)/g,
+'<div class="title">$1</div>'
+)
+
+.replace(
+/\n/g,
+"<br>"
+);
+
+
+
+output.innerHTML=html;
+
+
+// 保存记录
+
+saveHistory(text,result);
+
+
+
+}
+
+catch(e){
+
+output.innerHTML="连接失败："+e.message;
 
 }
 
@@ -227,14 +256,21 @@ output.innerText=
 
 
 
+// 慢速播放示例
 
-// 保存学习记录
+function slowSpeak(text){
 
+speakThai(text,0.5);
+
+}
+
+
+
+// 历史记录
 
 function saveHistory(word,result){
 
-
-let list =
+let list=
 JSON.parse(
 localStorage.getItem("thaiHistory")||"[]"
 );
@@ -242,8 +278,10 @@ localStorage.getItem("thaiHistory")||"[]"
 
 list.unshift({
 
-word,
-result,
+word:word,
+
+result:result,
+
 time:new Date().toLocaleString()
 
 });
@@ -251,66 +289,11 @@ time:new Date().toLocaleString()
 
 localStorage.setItem(
 "thaiHistory",
-JSON.stringify(list)
+JSON.stringify(list.slice(0,30))
 );
 
 
-loadHistory();
-
-
 }
-
-
-
-
-function loadHistory(){
-
-
-let list =
-JSON.parse(
-localStorage.getItem("thaiHistory")||"[]"
-);
-
-
-
-let box =
-document.getElementById("history");
-
-
-
-if(list.length===0){
-
-box.innerHTML="暂无记录";
-
-return;
-
-}
-
-
-
-box.innerHTML =
-list.slice(0,10)
-.map(x=>`
-
-<div class="card">
-
-<b>${x.word}</b>
-
-<br>
-
-<span class="small">
-${x.time}
-</span>
-
-</div>
-
-`)
-.join("");
-
-}
-
-
-loadHistory();
 
 
 
@@ -318,4 +301,5 @@ loadHistory();
 
 
 </body>
+
 </html>
