@@ -195,13 +195,10 @@ text:text
 
 
 
-let data =
-await res.json();
 
 
 
-let result =
-data.choices[0].message.content;
+let result = await res.text();
 
 
 
