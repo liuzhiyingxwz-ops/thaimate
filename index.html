@@ -321,22 +321,23 @@ function showHistory(){
 let list = JSON.parse(localStorage.getItem("thaiHistory") || "[]");
 
 if(list.length===0){
-
 alert("还没有学习记录");
-
 return;
-
 }
 
 let text="📚 学习记录\n\n";
 
 list.forEach((item,index)=>{
-
-text += (index+1)+"."+item.word+"\n";
-
+text += (index+1)+". "+item.word+"\n";
 });
 
-alert(text);
+let num = prompt(text+"\n请输入编号");
+
+let index = Number(num)-1;
+
+if(list[index]){
+document.getElementById("input").value = list[index].word;
+}
 
 }
 
