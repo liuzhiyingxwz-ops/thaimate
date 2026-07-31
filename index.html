@@ -201,11 +201,7 @@ await res.json();
 
 
 let result =
-JSON.stringify(
-data,
-null,
-2
-);
+data.choices[0].message.content;
 
 
 
