@@ -670,34 +670,31 @@ box.innerHTML="连接失败："+e.message;
 
 function addWord(word){
 
-
-let list=
-
+let list =
 JSON.parse(
-
 localStorage.getItem("thaiBook") || "[]"
-
 );
 
 
+if(list.includes(word)){
 
-if(!list.includes(word)){
-
-list.push(word);
-alert("已加入单词本");
-}else{
 alert("这个单词已经在单词本里了");
+
+return;
 
 }
 
 
+list.push(word);
+
+
 localStorage.setItem(
-
 "thaiBook",
-
 JSON.stringify(list)
-
 );
+
+
+alert("已加入单词本");
 
 
 }
