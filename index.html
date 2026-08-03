@@ -325,23 +325,35 @@ let clean = result.replace(/\*\*/g,"");
 
 let html = clean
 
+
+// 泰语单词卡片
 .replace(
-/([\u0E00-\u0E7F]+)/g,
-'<span class="thai">$1 <span class="sound" onclick="speakThai(\'$1\')">🔊</span></span>'
+/\*\*(.*?)\*\*/g,
+`
+<div class="word-card">
+
+<h3>$1</h3>
+
+<button class="sound" onclick="speakThai('$1')">🔊</button>
+
+<p>
+📌 单词解释<br>
+这里显示AI分析内容
+</p>
+
+</div>
+`
 )
 
-.replace(
-/### (.*)/g,
-'<div class="title">$1</div>'
-)
 
+// 换行
 .replace(
 /\n/g,
 "<br>"
 );
 
 
-output.innerHTML=html;
+output.innerHTML = html;
 
 
 // 保存记录
