@@ -173,10 +173,15 @@ margin-bottom:15px;
 
 font-size:16px;
 
-line-height:1.8;
+line-height:1.6;
 
-margin:10px 0;
+margin:8px 0;
 
+}
+.word-card .thai{
+color:#ff75ad;
+font-size:24px;
+font-weight:bold;
 }
 </style>
 
@@ -332,11 +337,11 @@ let html = clean
 
 // 泰语单词卡片
 .replace(
-/\*\*(.*?)\*\*/g,
+/^##(.*)$/g,
 `
 <div class="word-card">
 
-<h3>$1</h3>
+<h3 class="thai">$1</h3>
 
 <button class="sound" onclick="speakThai('$1')">🔊</button>
 
