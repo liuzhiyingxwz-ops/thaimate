@@ -4,11 +4,9 @@
 <head>
 
 <meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <title>ThaiMate V7</title>
-
 
 <style>
 
@@ -20,28 +18,46 @@ padding:10px;
 }
 
 
+h1{
+text-align:center;
+font-size:28px;
+}
+
+
 .card{
 
 background:#20232d;
-border-radius:20px;
-padding:18px;
-margin-bottom:16px;
+border-radius:18px;
+padding:15px;
+margin-top:15px;
 
 }
 
 
-h1{
+.tabs{
 
+display:flex;
+gap:8px;
+margin-bottom:15px;
+
+}
+
+
+.tab{
+
+flex:1;
+padding:12px 5px;
+border-radius:14px;
+background:#292d38;
 text-align:center;
-font-size:30px;
+cursor:pointer;
 
 }
 
 
-h2{
+.tab.active{
 
-font-size:22px;
-margin-top:0;
+background:#ff5b9a;
 
 }
 
@@ -49,72 +65,60 @@ margin-top:0;
 textarea{
 
 width:100%;
-height:90px;
+height:80px;
 
 background:#292d38;
 border:0;
-border-radius:15px;
+border-radius:14px;
 
 padding:12px;
-
-color:white;
-
-font-size:18px;
-
 box-sizing:border-box;
 
-}
+color:white;
+font-size:17px;
 
+}
 
 
 button{
 
 background:#ff5b9a;
+color:white;
 
 border:0;
 
-border-radius:15px;
+border-radius:14px;
 
-padding:12px 18px;
-
-color:white;
-
-font-size:16px;
+padding:10px 18px;
 
 font-weight:bold;
 
-}
-
-
-
-.thai{
-
-color:#ff75ad;
-
-font-size:22px;
-
-font-weight:bold;
+margin-top:10px;
 
 }
 
 
+.result{
 
-.sound{
+margin-top:15px;
 
-background:#343846;
-
-padding:5px 10px;
-
-font-size:14px;
+line-height:1.6;
 
 }
 
 
-.word{
+.hidden{
+
+display:none;
+
+}
+
+
+.word-card{
 
 background:#292d38;
 
-border-radius:15px;
+border-radius:14px;
 
 padding:12px;
 
@@ -123,9 +127,24 @@ margin-top:10px;
 }
 
 
-.blue{
+.thai{
 
-color:#67b7ff;
+color:#ff75ad;
+
+font-size:20px;
+
+font-weight:bold;
+
+}
+
+
+.sound{
+
+background:#343846;
+
+padding:3px 8px;
+
+margin-left:5px;
 
 }
 
@@ -135,13 +154,10 @@ color:#67b7ff;
 
 font-size:15px;
 
-line-height:1.6;
-
 }
 
 
 </style>
-
 
 </head>
 
@@ -154,30 +170,51 @@ line-height:1.6;
 </h1>
 
 
-<!-- 句子分析 -->
 
 <div class="card">
 
 
-<h2 class="blue">
-🗣 句子分析
-</h2>
+<div class="tabs">
 
 
-<textarea placeholder="输入泰语句子，例如：ฉันคิดถึงเธอมาก">
+<div class="tab active" onclick="showTab('sentence',this)">
+🗣句子
+</div>
+
+
+<div class="tab" onclick="showTab('word',this)">
+🔤单词
+</div>
+
+
+<div class="tab" onclick="showTab('book',this)">
+📖单词本
+</div>
+
+
+</div>
+
+
+
+
+<!-- 句子 -->
+
+<div id="sentence">
+
+
+<textarea placeholder="输入泰语句子">
 
 </textarea>
 
 
-<br><br>
-
+<br>
 
 <button>
 开始分析
 </button>
 
 
-<div class="small">
+<div class="result">
 
 等待分析...
 
@@ -188,31 +225,28 @@ line-height:1.6;
 
 
 
-<!-- 单词分析 -->
 
 
-<div class="card">
+
+<!-- 单词 -->
 
 
-<h2>
-🔤 单词分析
-</h2>
+<div id="word" class="hidden">
 
 
-<textarea placeholder="输入单个泰语词，例如：ไฟ">
+<textarea placeholder="输入泰语单词">
 
 </textarea>
 
 
-<br><br>
-
+<br>
 
 <button>
-开始分析单词
+分析单词
 </button>
 
 
-<div class="small">
+<div class="result">
 
 等待分析...
 
@@ -220,6 +254,8 @@ line-height:1.6;
 
 
 </div>
+
+
 
 
 
@@ -227,34 +263,33 @@ line-height:1.6;
 <!-- 单词本 -->
 
 
-<div class="card">
+<div id="book" class="hidden">
 
 
-<h2>
-📖 我的单词本
-</h2>
+<div class="word-card">
 
-
-<div class="word">
-
-
+<div class="thai">
 ไฟ 🔊 fai /faj/
+</div>
 
-<br>
-
+<div>
 火、电灯 · 名词
+</div>
+
 
 </div>
 
 
-<div class="word">
 
+<div class="word-card">
 
+<div class="thai">
 คิดถึง 🔊 khít-thǔng
+</div>
 
-<br>
-
+<div>
 想念 · 动词
+</div>
 
 </div>
 
@@ -262,6 +297,38 @@ line-height:1.6;
 
 </div>
 
+
+
+</div>
+
+
+
+<script>
+
+
+function showTab(id,btn){
+
+document.querySelectorAll(".tabs .tab")
+.forEach(x=>x.classList.remove("active"));
+
+
+btn.classList.add("active");
+
+
+document.getElementById("sentence").classList.add("hidden");
+
+document.getElementById("word").classList.add("hidden");
+
+document.getElementById("book").classList.add("hidden");
+
+
+document.getElementById(id).classList.remove("hidden");
+
+
+}
+
+
+</script>
 
 
 </body>
