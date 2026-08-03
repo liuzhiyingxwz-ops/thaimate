@@ -365,14 +365,6 @@ html = html.replace(
 
 
 html = '<div class="word-card">' + html + '</div>';
-367 html = '<div class="word-card">' + html + '</div>';
-
-
-html = html.replace(
-/(泰语[:：]\s*)([\u0E00-\u0E7F]+)/g,
-'$1<span class="thai">$2</span> <button class="sound" onclick="speakThai(\'$2\')">🔊</button>'
-);
-
 
 output.innerHTML = html;
 output.innerHTML = html;
