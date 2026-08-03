@@ -353,6 +353,14 @@ let html = clean
 );
 
 
+html = html.replace(
+/【(.*?)】/g,
+'</div><div class="word-card"><h3>【$1】</h3>'
+);
+
+
+html = '<div class="word-card">' + html + '</div>';
+
 output.innerHTML = html;
 
 
