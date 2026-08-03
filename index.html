@@ -536,8 +536,9 @@ let result=await res.text();
 result=result
 .replace(/\*\*/g,"")
 .replace(/---/g,"")
-.replace(/([\u0E00-\u0E7F]+)/g,
-'<span>$1 <button class="sound" onclick="speakThai(\'$1\')">🔊</button></span>');
+result=result
+.replace(/\*\*/g,"")
+.replace(/---/g,"");
 
 
 box.innerHTML=`
