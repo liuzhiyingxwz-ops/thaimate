@@ -4,32 +4,43 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>ThaiMate V7</title>
+<title>ThaiMate V7.1</title>
+
 
 <style>
 
+*{
+box-sizing:border-box;
+}
+
+
 body{
+
+margin:0;
+
 background:#11131a;
+
 color:white;
+
 font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;
-padding:10px;
+
+padding:12px;
+
 }
 
 
-h1{
+.header{
+
 text-align:center;
-font-size:28px;
-}
 
+font-size:26px;
 
-.card{
+font-weight:bold;
 
-background:#20232d;
-border-radius:18px;
-padding:15px;
-margin-top:15px;
+margin:10px 0 18px;
 
 }
 
@@ -37,8 +48,14 @@ margin-top:15px;
 .tabs{
 
 display:flex;
+
 gap:8px;
-margin-bottom:15px;
+
+background:#20232d;
+
+padding:8px;
+
+border-radius:18px;
 
 }
 
@@ -46,10 +63,17 @@ margin-bottom:15px;
 .tab{
 
 flex:1;
-padding:12px 5px;
-border-radius:14px;
-background:#292d38;
+
 text-align:center;
+
+padding:9px 5px;
+
+border-radius:12px;
+
+background:#292d38;
+
+font-size:15px;
+
 cursor:pointer;
 
 }
@@ -62,34 +86,73 @@ background:#ff5b9a;
 }
 
 
+
+.panel{
+
+display:none;
+
+margin-top:15px;
+
+}
+
+
+.panel.active{
+
+display:block;
+
+}
+
+
+
+.card{
+
+background:#20232d;
+
+border-radius:18px;
+
+padding:15px;
+
+}
+
+
+
 textarea{
 
 width:100%;
-height:80px;
+
+height:70px;
 
 background:#292d38;
+
 border:0;
+
 border-radius:14px;
 
 padding:12px;
-box-sizing:border-box;
 
 color:white;
-font-size:17px;
+
+font-size:16px;
+
+resize:none;
 
 }
+
 
 
 button{
 
 background:#ff5b9a;
+
 color:white;
 
 border:0;
 
 border-radius:14px;
 
-padding:10px 18px;
+padding:10px 16px;
+
+font-size:15px;
 
 font-weight:bold;
 
@@ -98,23 +161,16 @@ margin-top:10px;
 }
 
 
+
 .result{
 
-margin-top:15px;
-
-line-height:1.6;
+margin-top:12px;
 
 }
 
 
-.hidden{
 
-display:none;
-
-}
-
-
-.word-card{
+.result-card{
 
 background:#292d38;
 
@@ -124,7 +180,10 @@ padding:12px;
 
 margin-top:10px;
 
+line-height:1.6;
+
 }
+
 
 
 .thai{
@@ -142,22 +201,49 @@ font-weight:bold;
 
 background:#343846;
 
-padding:3px 8px;
+padding:4px 8px;
+
+font-size:14px;
 
 margin-left:5px;
 
 }
 
 
+.word-line{
+
+font-size:15px;
+
+margin-top:6px;
+
+}
+
 
 .small{
 
-font-size:15px;
+font-size:14px;
+
+color:#ddd;
+
+}
+
+
+
+.book-item{
+
+background:#292d38;
+
+border-radius:12px;
+
+padding:10px;
+
+margin-bottom:8px;
 
 }
 
 
 </style>
+
 
 </head>
 
@@ -165,29 +251,25 @@ font-size:15px;
 <body>
 
 
-<h1>
-🇹🇭 ThaiMate V7
-</h1>
-
-
-
-<div class="card">
+<div class="header">
+🇹🇭 ThaiMate V7.1
+</div>
 
 
 <div class="tabs">
 
 
-<div class="tab active" onclick="showTab('sentence',this)">
+<div class="tab active" onclick="switchTab('sentence',this)">
 🗣句子
 </div>
 
 
-<div class="tab" onclick="showTab('word',this)">
+<div class="tab" onclick="switchTab('word',this)">
 🔤单词
 </div>
 
 
-<div class="tab" onclick="showTab('book',this)">
+<div class="tab" onclick="switchTab('book',this)">
 📖单词本
 </div>
 
@@ -197,26 +279,29 @@ font-size:15px;
 
 
 
-<!-- 句子 -->
 
-<div id="sentence">
+<!-- 句子模块 -->
+
+<div id="sentence" class="panel active">
 
 
-<textarea placeholder="输入泰语句子">
+<div class="card">
 
+
+<textarea id="sentenceInput"
+placeholder="输入泰语句子，例如：ฉันคิดถึงเธอมาก">
 </textarea>
 
 
 <br>
 
-<button>
+
+<button onclick="analyzeSentence()">
 开始分析
 </button>
 
 
-<div class="result">
-
-等待分析...
+<div id="sentenceResult" class="result">
 
 </div>
 
@@ -224,31 +309,38 @@ font-size:15px;
 </div>
 
 
+</div>
 
 
 
 
-<!-- 单词 -->
+
+<!-- 单词模块 -->
 
 
-<div id="word" class="hidden">
+<div id="word" class="panel">
 
 
-<textarea placeholder="输入泰语单词">
+<div class="card">
 
+
+<textarea id="wordInput"
+placeholder="输入泰语单词，例如：ไฟ">
 </textarea>
 
 
 <br>
 
-<button>
+
+<button onclick="analyzeWord()">
 分析单词
 </button>
 
 
-<div class="result">
+<div id="wordResult" class="result">
 
-等待分析...
+</div>
+
 
 </div>
 
@@ -263,74 +355,364 @@ font-size:15px;
 <!-- 单词本 -->
 
 
-<div id="book" class="hidden">
+<div id="book" class="panel">
 
 
-<div class="word-card">
+<div class="card">
 
-<div class="thai">
+
+<h3>
+📖 我的单词本
+</h3>
+
+
+<div id="bookList">
+
+
+<div class="book-item">
+
 ไฟ 🔊 fai /faj/
-</div>
 
-<div>
+<br>
+
 火、电灯 · 名词
-</div>
-
 
 </div>
 
 
+<div class="book-item">
 
-<div class="word-card">
-
-<div class="thai">
 คิดถึง 🔊 khít-thǔng
-</div>
 
-<div>
+<br>
+
 想念 · 动词
-</div>
 
 </div>
 
 
+</div>
+
 
 </div>
 
 
-
+</div>
 </div>
 
+
+</body>
 
 
 <script>
 
 
-function showTab(id,btn){
+// ===== Tab切换 =====
 
-document.querySelectorAll(".tabs .tab")
-.forEach(x=>x.classList.remove("active"));
+function switchTab(id,btn){
+
+document.querySelectorAll(".tab")
+.forEach(t=>t.classList.remove("active"));
 
 
 btn.classList.add("active");
 
 
-document.getElementById("sentence").classList.add("hidden");
-
-document.getElementById("word").classList.add("hidden");
-
-document.getElementById("book").classList.add("hidden");
+document.querySelectorAll(".panel")
+.forEach(p=>p.classList.remove("active"));
 
 
-document.getElementById(id).classList.remove("hidden");
+document.getElementById(id)
+.classList.add("active");
 
 
 }
 
 
+
+// ===== 泰语播音 =====
+
+function speakThai(text,speed=1){
+
+let speech=new SpeechSynthesisUtterance(text);
+
+speech.lang="th-TH";
+
+speech.rate=speed;
+
+speechSynthesis.cancel();
+
+speechSynthesis.speak(speech);
+
+}
+
+
+
+
+
+// ===== 句子分析 =====
+
+async function analyzeSentence(){
+
+
+let text=document.getElementById("sentenceInput").value;
+
+
+let box=document.getElementById("sentenceResult");
+
+
+if(!text){
+
+box.innerHTML="请输入泰语句子";
+
+return;
+
+}
+
+
+box.innerHTML="分析中...";
+
+
+
+// 这里以后接你的 Cloudflare 句子接口
+
+
+box.innerHTML=`
+
+<div class="result-card">
+
+
+<div class="thai">
+
+${text}
+
+<button class="sound"
+onclick="speakThai('${text}')">
+
+🔊
+
+</button>
+
+</div>
+
+
+<div class="word-line">
+
+中文意思：这里显示句子翻译
+
+</div>
+
+
+<div class="word-line">
+
+📌 单词解析：
+
+<br>
+
+每个单词：
+泰语 🔊 罗马音 / IPA · 词性 · 中文
+
+</div>
+
+
+
+<div class="word-line">
+
+📌 短语搭配：
+
+<br>
+
+这里显示固定搭配
+
+</div>
+
+
+
+<div class="word-line">
+
+📌 语法：
+
+<br>
+
+这里显示语法说明
+
+</div>
+
+
+
+<div class="word-line">
+
+📌 例句：
+
+<br>
+
+这里显示例句
+
+</div>
+
+
+
+</div>
+
+`;
+
+}
+
+
+
+
+
+// ===== 单词分析 =====
+
+
+async function analyzeWord(){
+
+
+let text=document.getElementById("wordInput").value;
+
+
+let box=document.getElementById("wordResult");
+
+
+if(!text){
+
+box.innerHTML="请输入单词";
+
+return;
+
+}
+
+
+box.innerHTML="分析中...";
+
+
+
+// 以后接单词专用AI提示词
+
+
+box.innerHTML=`
+
+<div class="result-card">
+
+
+<div class="thai">
+
+${text}
+
+<button class="sound"
+onclick="speakThai('${text}')">
+
+🔊
+
+</button>
+
+
+</div>
+
+
+
+<div class="word-line">
+
+罗马音：
+
+这里显示
+
+</div>
+
+
+<div class="word-line">
+
+IPA：
+
+这里显示
+
+</div>
+
+
+
+<div class="word-line">
+
+词性：
+
+这里显示
+
+</div>
+
+
+
+<div class="word-line">
+
+中文：
+
+这里显示
+
+</div>
+
+
+
+<div class="word-line">
+
+例句：
+
+这里显示
+
+</div>
+
+
+
+<button onclick="addWord('${text}')">
+
+📖加入单词本
+
+</button>
+
+
+</div>
+
+`;
+
+}
+
+
+
+
+// ===== 单词本 =====
+
+
+function addWord(word){
+
+
+let list=JSON.parse(
+
+localStorage.getItem("thaiBook")||"[]"
+
+);
+
+
+if(!list.includes(word)){
+
+list.push(word);
+
+localStorage.setItem(
+
+"thaiBook",
+
+JSON.stringify(list)
+
+);
+
+}
+
+
+alert("已加入单词本");
+
+
+}
+
+
+
+
 </script>
 
-
-</body>
 
 </html>
