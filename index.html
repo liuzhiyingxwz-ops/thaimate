@@ -533,12 +533,18 @@ type:"sentence"
 
 
 let result=await res.text();
-
+result=result
+.replace(/\*\*/g,"")
+.replace(/---/g,"");
 
 
 box.innerHTML=`
 
 <div class="result-card">
+
+<button class="sound" onclick="speakThai('${text}')">🔊</button>
+
+<br>
 
 ${result.replace(/\n/g,"<br>")}
 
