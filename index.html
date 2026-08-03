@@ -537,7 +537,10 @@ console.log("AI返回成功",result);
 result=result
 .replace(/\*\*/g,"")
 .replace(/---/g,"");
-
+result=result.replace(
+/(\d+\.\s*)([\u0E00-\u0E7F]+)/g,
+'$1<button class="sound" onclick="speakThai(\'$2\')">🔊</button> $2'
+);
 
 box.innerHTML=`
 
