@@ -486,12 +486,9 @@ speechSynthesis.speak(speech);
 
 async function analyzeSentence(){
 
-
 let text=document.getElementById("sentenceInput").value;
 
-
 let box=document.getElementById("sentenceResult");
-
 
 
 if(!text){
@@ -503,96 +500,60 @@ return;
 }
 
 
-
 box.innerHTML="分析中...";
 
 
+try{
 
-// 后面接句子专用AI接口
+
+let res=await fetch(
+"https://thaimate-ai.liuzhiyingxwz.workers.dev/",
+{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify({
+
+text:text,
+
+type:"sentence"
+
+})
+
+}
+
+);
+
+
+
+let result=await res.text();
+
 
 
 box.innerHTML=`
 
 <div class="result-card">
 
-
-<div class="thai">
-
-${text}
-
-<button class="sound"
-onclick="speakThai('${text}')">
-
-🔊
-
-</button>
-
-
-</div>
-
-
-
-<div class="word-line">
-
-中文意思：
-
-这里显示整句翻译
-
-</div>
-
-
-
-<div class="word-line">
-
-📌 单词解析：
-
-<br>
-
-泰语 🔊 罗马音 / IPA · 词性 · 中文
-
-</div>
-
-
-
-<div class="word-line">
-
-📌 短语搭配：
-
-<br>
-
-固定搭配和常用表达
-
-</div>
-
-
-
-<div class="word-line">
-
-📌 语法：
-
-<br>
-
-句型结构说明
-
-</div>
-
-
-
-<div class="word-line">
-
-📌 例句：
-
-<br>
-
-相关例句
-
-</div>
-
+${result.replace(/\n/g,"<br>")}
 
 </div>
 
 `;
 
+
+}
+
+catch(e){
+
+box.innerHTML="连接失败："+e.message;
+
+}
 
 
 }
@@ -607,12 +568,9 @@ onclick="speakThai('${text}')">
 
 async function analyzeWord(){
 
-
 let text=document.getElementById("wordInput").value;
 
-
 let box=document.getElementById("wordResult");
-
 
 
 if(!text){
@@ -624,73 +582,53 @@ return;
 }
 
 
-
 box.innerHTML="分析中...";
 
 
+try{
 
 
-box.innerHTML=`
+let res=await fetch(
+
+"https://thaimate-ai.liuzhiyingxwz.workers.dev/",
+
+{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify({
+
+text:text,
+
+type:"word"
+
+})
+
+}
+
+);
+
+
+
+let result=await res.text();
+
+
+
+box.innerHTML=
+
+`
 
 <div class="result-card">
 
+${result.replace(/\n/g,"<br>")}
 
-<div class="thai">
-
-${text}
-
-
-<button class="sound"
-onclick="speakThai('${text}')">
-
-🔊
-
-</button>
-
-
-</div>
-
-
-
-<div class="word-line">
-
-罗马音 / IPA：
-
-这里显示
-
-</div>
-
-
-
-<div class="word-line">
-
-词性：
-
-这里显示
-
-</div>
-
-
-
-<div class="word-line">
-
-中文：
-
-这里显示
-
-</div>
-
-
-
-<div class="word-line">
-
-例句：
-
-这里显示
-
-</div>
-
-
+<br>
 
 <button onclick="addWord('${text}')">
 
@@ -698,11 +636,19 @@ onclick="speakThai('${text}')">
 
 </button>
 
-
 </div>
 
 `;
 
+
+
+}
+
+catch(e){
+
+box.innerHTML="连接失败："+e.message;
+
+}
 
 
 }
