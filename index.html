@@ -5,9 +5,9 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>泰伴 ThaiMate V6.1</title>
+<title>ThaiMate V7</title>
 
 
 <style>
@@ -16,174 +16,132 @@ body{
 background:#11131a;
 color:white;
 font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;
-padding:8px;
-}
-
-
-h1{
-font-size:32px;
+padding:10px;
 }
 
 
 .card{
+
 background:#20232d;
-border-radius:22px;
-padding:16px;
-margin-bottom:20px;
+border-radius:20px;
+padding:18px;
+margin-bottom:16px;
+
+}
+
+
+h1{
+
+text-align:center;
+font-size:30px;
+
+}
+
+
+h2{
+
+font-size:22px;
+margin-top:0;
+
 }
 
 
 textarea{
 
 width:100%;
-height:120px;
+height:90px;
+
 background:#292d38;
 border:0;
-border-radius:16px;
-padding:15px;
+border-radius:15px;
+
+padding:12px;
+
 color:white;
+
 font-size:18px;
 
+box-sizing:border-box;
+
 }
+
 
 
 button{
 
-border:0;
-border-radius:15px;
-padding:14px 22px;
 background:#ff5b9a;
+
+border:0;
+
+border-radius:15px;
+
+padding:12px 18px;
+
 color:white;
-font-size:17px;
+
+font-size:16px;
+
 font-weight:bold;
 
 }
 
-
-.result{
-
-line-height:1.8;
-font-size:17px;
-
-}
 
 
 .thai{
 
 color:#ff75ad;
+
 font-size:22px;
+
 font-weight:bold;
 
 }
+
 
 
 .sound{
 
 background:#343846;
-padding:6px 12px;
-border-radius:12px;
-margin-left:8px;
-cursor:pointer;
+
+padding:5px 10px;
+
+font-size:14px;
 
 }
 
 
-.title{
-
-font-size:22px;
-font-weight:bold;
-margin-top:20px;
-
-}
-
-.app-header{
-
-background:#20232d;
-
-padding:8px;
-
-border-radius:22px;
-
-margin-bottom:20px;
-
-text-align:center;
-
-}
-
-
-.app-header h1{
-
-font-size:28px;
-
-margin:0;
-
-}
-
-
-.app-header p{
-
-color:#ff75ad;
-
-font-size:15px;
-
-margin-top:5px;
-
-}
-.learn-card h2{
-
-font-size:22px;
-
-margin-bottom:15px;
-
-}
-
-
-.learn-card textarea{
-
-box-sizing:border-box;
-
-}
-.word-card{
+.word{
 
 background:#292d38;
 
-border-radius:18px;
+border-radius:15px;
 
-padding:20px;
+padding:12px;
 
-margin:20px 0;
-
-border-left:5px solid #ff75ad;
+margin-top:10px;
 
 }
 
 
-.word-card h3{
+.blue{
 
-color:#ff75ad;
-
-font-size:24px;
-
-margin-bottom:15px;
+color:#67b7ff;
 
 }
 
 
-.word-card p{
 
-font-size:16px;
+.small{
+
+font-size:15px;
 
 line-height:1.6;
 
-margin:8px 0;
+}
 
-}
-.word-card .thai{
-color:#ff75ad;
-font-size:24px;
-font-weight:bold;
-}
+
 </style>
+
 
 </head>
 
@@ -191,327 +149,119 @@ font-weight:bold;
 <body>
 
 
-<div class="app-header">
-
 <h1>
-🇹🇭 ThaiMate
+🇹🇭 ThaiMate V7
 </h1>
 
-<p>
-每天学一句泰语
-</p>
 
-</div>
+<!-- 句子分析 -->
 
-
-<div class="card learn-card">
+<div class="card">
 
 
-<h2>
-今天想学哪句泰语？
+<h2 class="blue">
+🗣 句子分析
 </h2>
 
 
-<textarea id="input"
-placeholder="输入泰语，例如：ฉันคิดถึงเธอมาก">
+<textarea placeholder="输入泰语句子，例如：ฉันคิดถึงเธอมาก">
+
 </textarea>
 
 
 <br><br>
 
 
-<button onclick="analyze()">
+<button>
 开始分析
 </button>
 
 
-<div style="margin-top:15px">
-
-<button onclick="speakFull()">🔊 播放整句</button>
-
-<select id="speed">
-<option value="0.6">慢速</option>
-<option value="1" selected>正常</option>
-<option value="1.4">快速</option>
-</select>
- 
-<button onclick="showHistory()">📚 学习记录</button>
-</div>
-
-
-</div>
-
-
-<div class="card result" id="output">
+<div class="small">
 
 等待分析...
 
 </div>
-<script>
 
 
-// 泰语发音
-
-function speakThai(text, speed=1){
-
-let speech = new SpeechSynthesisUtterance(text);
-
-speech.lang="th-TH";
-
-speech.rate=speed;
-
-speechSynthesis.cancel();
-
-speechSynthesis.speak(speech);
-
-}
-function speakFull(){
-
-let text=document.getElementById("input").value;
-
-let speed=document.getElementById("speed").value;
-
-speakThai(text,Number(speed));
-
-}
-
-
-// AI分析
-
-async function analyze(){
-
-let text=document.getElementById("input").value;
-
-let output=document.getElementById("output");
-
-
-if(!text){
-
-output.innerHTML="请输入泰语";
-
-return;
-
-}
-
-
-output.innerHTML="AI分析中...";
-console.log("开始运行");
-
-
-try{
-
-
-let res=await fetch(
-"https://thaimate-ai.liuzhiyingxwz.workers.dev/",
-{
-
-method:"POST",
-
-headers:{
-
-"Content-Type":"application/json"
-
-},
-
-body:JSON.stringify({
-
-text:text
-
-})
-
-}
-
-);
-
-
-
-let result = await res.text();
-
-let html = result.replace(/\*\*/g,"");
-
-
-html = html.replace(
-/泰语：\s*([^\n<]+)/g,
-'泰语：<span class="thai">$1</span> <button class="sound" onclick="speakThai(\'$1\')">🔊</button>'
-);
-
-// 添加播放按钮
-
-
-html = html.replace(
-/\n/g,
-"<br>"
-);
-
-html = '<div class="word-card">' + html + '</div>';
-
-output.innerHTML = html;
-
-
-// 保存记录
-
-saveHistory(text,result);
-
-
-
-}
-
-catch(e){
-
-output.innerHTML="连接失败："+e.message;
-
-}
-
-
-}
-
-
-
-// 慢速播放示例
-
-function slowSpeak(text){
-
-speakThai(text,0.5);
-
-}
-
-
-
-// 历史记录
-
-function saveHistory(word,result){
-
-let list=
-JSON.parse(
-localStorage.getItem("thaiHistory")||"[]"
-);
-
-
-list.unshift({
-
-word:word,
-
-result:result,
-
-time:new Date().toLocaleString()
-
-});
-
-
-localStorage.setItem(
-"thaiHistory",
-JSON.stringify(list.slice(0,30))
-);
-
-
-}
-function showHistory(){
-
-let list = JSON.parse(localStorage.getItem("thaiHistory") || "[]");
-
-if(list.length===0){
-alert("还没有学习记录");
-return;
-}
-
-let html = `
-<div style="
-position:fixed;
-top:10%;
-left:5%;
-right:5%;
-background:#20232d;
-color:white;
-padding:20px;
-border-radius:20px;
-z-index:999;
-max-height:70vh;
-overflow:auto;
-">
-
-<h2>📚 学习记录</h2>
-`;
-
-list.forEach((item,index)=>{
-
-html += `
-<div style="
-background:#292d38;
-padding:15px;
-margin:12px 0;
-border-radius:15px;
-">
-
-<div style="
-font-size:20px;
-color:#ff75ad;
-font-weight:bold;
-">
-${item.word}
 </div>
+
+
+
+<!-- 单词分析 -->
+
+
+<div class="card">
+
+
+<h2>
+🔤 单词分析
+</h2>
+
+
+<textarea placeholder="输入单个泰语词，例如：ไฟ">
+
+</textarea>
+
+
+<br><br>
+
+
+<button>
+开始分析单词
+</button>
+
+
+<div class="small">
+
+等待分析...
+
+</div>
+
+
+</div>
+
+
+
+
+<!-- 单词本 -->
+
+
+<div class="card">
+
+
+<h2>
+📖 我的单词本
+</h2>
+
+
+<div class="word">
+
+
+ไฟ 🔊 fai /faj/
 
 <br>
 
-<button class="sound" onclick="speakThai('${item.word}')">
-🔊播放
-</button>
-
-<button onclick="loadHistory(${index})">
-🔄重新分析
-</button>
+火、电灯 · 名词
 
 </div>
-`;
-
-});
 
 
-html += `
-<button onclick="closeHistory()">
-关闭
-</button>
+<div class="word">
+
+
+คิดถึง 🔊 khít-thǔng
+
+<br>
+
+想念 · 动词
 
 </div>
-`;
-
-let div=document.createElement("div");
-
-div.id="historyBox";
-
-div.innerHTML=html;
-
-document.body.appendChild(div);
-
-}
-function closeHistory(){
-
-let box=document.getElementById("historyBox");
-
-if(box){
-box.remove();
-}
-
-}
 
 
-function loadHistory(index){
 
-let list = JSON.parse(localStorage.getItem("thaiHistory") || "[]");
+</div>
 
-if(list[index]){
-
-document.getElementById("input").value=list[index].word;
-
-closeHistory();
-
-analyze();
-
-}
-
-}
-
-
-</script>
 
 
 </body>
