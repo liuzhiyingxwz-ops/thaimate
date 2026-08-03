@@ -624,7 +624,8 @@ type:"word"
 
 
 let result=await res.text();
-
+result=result.replace(/([\u0E00-\u0E7F]+)/g,
+'<button class="sound" onclick="speakThai(\'$1\')">🔊</button> $1');
 
 
 box.innerHTML=
