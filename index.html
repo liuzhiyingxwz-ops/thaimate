@@ -329,44 +329,15 @@ let result=await res.text();
 
 // 添加播放按钮
 
-let clean = result.replace(/\*\*/g,"");
+let html = result.replace(/\*\*/g,"");
 
-// 泰语单词卡片
-.replace(
-/^##(.*)$/g,
-`
-<div class="word-card">
-
-<h3 class="thai">$1</h3>
-
-<button class="sound" onclick="speakThai('$1')">🔊</button>
-
-<p>
-📌 单词解释<br>
-这里显示AI分析内容
-</p>
-
-</div>
-`
-)
-
-
-// 换行
-.replace(
+html = html.replace(
 /\n/g,
 "<br>"
 );
 
-
-html = html.replace(
-/【(.*?)】/g,
-'</div><div class="word-card"><h3>【$1】</h3>'
-);
-
-
 html = '<div class="word-card">' + html + '</div>';
 
-output.innerHTML = html;
 output.innerHTML = html;
 
 
