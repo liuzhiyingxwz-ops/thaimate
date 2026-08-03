@@ -331,14 +331,6 @@ let result=await res.text();
 
 let clean = result.replace(/\*\*/g,"");
 
-
-let html = clean
-html = html.replace(
-/(泰语：)([\u0E00-\u0E7F]+)/g,
-'$1<span class="thai">$2</span> <button class="sound" onclick="speakThai(\'$2\')">🔊</button>'
-);
-
-
 // 泰语单词卡片
 .replace(
 /^##(.*)$/g,
@@ -373,7 +365,16 @@ html = html.replace(
 
 
 html = '<div class="word-card">' + html + '</div>';
+367 html = '<div class="word-card">' + html + '</div>';
 
+
+html = html.replace(
+/(泰语[:：]\s*)([\u0E00-\u0E7F]+)/g,
+'$1<span class="thai">$2</span> <button class="sound" onclick="speakThai(\'$2\')">🔊</button>'
+);
+
+
+output.innerHTML = html;
 output.innerHTML = html;
 
 
