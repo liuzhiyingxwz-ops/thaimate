@@ -328,9 +328,16 @@ text:text
 let result=await res.text();
 
 
-// 添加播放按钮
+result = result.replace(
+/(泰语：)(.*)/g,
+'$1<span class="thai">$2</span> <button class="sound" onclick="speakThai(\'$2\')">🔊</button>'
+);
+
 
 let html = result.replace(/\*\*/g,"");
+
+// 添加播放按钮
+
 
 html = html.replace(
 /\n/g,
