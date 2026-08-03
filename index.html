@@ -325,16 +325,15 @@ text:text
 
 
 
-let result=await res.text();
-
-
-result = result.replace(
-/(泰语：)(.*)/g,
-'$1<span class="thai">$2</span> <button class="sound" onclick="speakThai(\'$2\')">🔊</button>'
-);
-
+let result = await res.text();
 
 let html = result.replace(/\*\*/g,"");
+
+
+html = html.replace(
+/泰语：\s*([^\n<]+)/g,
+'泰语：<span class="thai">$1</span> <button class="sound" onclick="speakThai(\'$1\')">🔊</button>'
+);
 
 // 添加播放按钮
 
@@ -453,7 +452,7 @@ ${item.word}
 
 <br>
 
-<button class="sound" onclick="speakThai(this.dataset.word)" data-word="$1">🔊</button>
+<button class="sound" onclick="speakThai('${item.word}')">
 🔊播放
 </button>
 
